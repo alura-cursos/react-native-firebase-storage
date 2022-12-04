@@ -21,12 +21,6 @@ export default StyleSheet.create({
 
         elevation: 5,
     },
-    imagem: {
-        width: "100%",
-        height: 200,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-    },
     containerTexto: {
         flexDirection: "column",
         width: "100%",
