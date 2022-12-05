@@ -13,8 +13,6 @@ export default function Principal({ navigation }) {
         pegarPostsTempoReal(setPosts);
     },[])
 
-
-
     return (
         <View style={estilos.container}>
             <Cabecalho />
@@ -27,6 +25,7 @@ export default function Principal({ navigation }) {
                         titulo={item.titulo}  
                         fonte={item.fonte} 
                         descricao={item.descricao} 
+                        imagem={item.imagemUrl}
                         acao={() => navigation.navigate("Post", { item })}
                     />
                 ))}
