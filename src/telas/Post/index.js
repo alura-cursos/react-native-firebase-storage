@@ -27,7 +27,10 @@ export default function Post({ navigation, route }) {
             await atualizarPost(item.id, post);
             navigation.goBack();
         } else {
-            const idPost = await salvarPost(post);
+            const idPost = await salvarPost({
+                ...post,
+                imagemUrl: ''
+            });
             navigation.goBack()
             const url = await salvarImagem(imagemGalaxia, 'galaxia');
             await atualizarPost(idPost, {
