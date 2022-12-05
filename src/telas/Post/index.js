@@ -5,8 +5,7 @@ import estilos from "./estilos";
 import { entradas } from "./entradas";
 import { alteraDados } from "../../utils/comum";
 import { IconeClicavel } from "../../componentes/IconeClicavel";
-import { storage } from "../../config/firebase";
-import { ref, uploadBytes } from 'firebase/storage'
+import { salvarImagem } from "../../servicos/storage";
 
 const imagemGalaxia = "https://img.freepik.com/fotos-gratis/fundo-de-galaxia-espacial_53876-93121.jpg?w=1380&t=st=1670244963~exp=1670245563~hmac=f67b50518f25bd1278963ec472362c64905851115ae154cc3866fd99a3cea7c1"
 
@@ -17,39 +16,28 @@ export default function Post({ navigation, route }) {
     const [post, setPost] = useState({
         titulo: item?.titulo || "",
         fonte: item?.fonte || "",
-        descricao: item?.descricao || ""
+        descricao: item?.descricao || "",
+        imagemUrl: item?.imagemUrl || null
     });
 
     async function salvar() {
         setDesabilitarEnvio(true);
+
+        const url = await salvarImagem(imagemGalaxia, 'galaxia');
+
         if (item) {
             await atualizarPost(item.id, post);
         } else {
-            await salvarPost(post);
+            await salvarPost({...post, imagemUrl: url});
         }
         
         navigation.goBack();
     }
 
-    async function salvarImagem(){
-        const downloadImagem = await fetch(imagemGalaxia)
-        const blobImagem = await downloadImagem.blob()
 
-        const imagemRef = ref(storage, 'posts/imagem.png')
-
-        uploadBytes(imagemRef, blobImagem).then(() => {
-            console.log("upload feito")
-        }).catch((error) => {
-            console.log(error)
-        })
-    }
 
     return (
         <View style={estilos.container}>
-
-            <Image source={{ uri: 'https://firebasestorage.googleapis.com/v0/b/spaceapp-d3bc1.appspot.com/o/posts%2Fimagem.png?alt=media&token=002be812-998e-4a59-8012-1e4de9b47e08' }}
-            style={{ width: 200, height: 200 }} />
-
             <View style={estilos.containerTitulo}>
                 <Text style={estilos.titulo}>{item ? "Editar post" : "Novo Post"}</Text>
                 <IconeClicavel 
@@ -82,7 +70,7 @@ export default function Post({ navigation, route }) {
                 ))}
             </ScrollView>
 
-            <TouchableOpacity style={estilos.botao} onPress={salvarImagem} disabled={desabilitarEnvio}>
+            <TouchableOpacity style={estilos.botao} onPress={salvar} disabled={desabilitarEnvio}>
                 <Text style={estilos.textoBotao}>Salvar</Text>
             </TouchableOpacity>
         </View>
