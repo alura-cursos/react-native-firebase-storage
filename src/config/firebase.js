@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID } from "@env"
 
 const firebaseConfig = {
@@ -17,4 +18,6 @@ const app = initializeApp(firebaseConfig);
 // Inicializa o Firestore
 const db = getFirestore(app);
 
-export { db };
+const storage = getStorage(app)
+
+export { db, storage };
