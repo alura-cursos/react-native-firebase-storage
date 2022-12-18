@@ -60,5 +60,16 @@ export default StyleSheet.create({
         height: 200,
         borderRadius: 5,
         marginVertical: 10,
+    },
+    opcao: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        color: '#000',
+        paddingHorizontal: 20,
+        width: '100%',
+        height: 50,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc'
     }
 });

@@ -9,12 +9,14 @@ import { salvarImagem } from "../../servicos/storage";
 import * as ImagePicker from 'expo-image-picker';
 
 import uploadImagemPadrao from '../../assets/upload.jpeg';
+import { MenuSelecaoInferior } from "../../componentes/MenuSelecaoInferior";
 
 export default function Post({ navigation, route }) {
     const [desabilitarEnvio, setDesabilitarEnvio] = useState(false);
     const { item } = route?.params || {};
 
     const [imagem, setImagem] = useState(item?.imagemUrl || null)
+    const [mostrarMenu, setMostrarMenu] = useState(false);
 
     const [post, setPost] = useState({
         titulo: item?.titulo || "",
@@ -109,7 +111,7 @@ export default function Post({ navigation, route }) {
 
                 <TouchableOpacity 
                     style={estilos.imagem}
-                    onPress={escolherImagemDaGaleria}
+                    onPress={() => setMostrarMenu(true)}
                 >
                     <Image 
                         source={imagem ? { uri: imagem} : uploadImagemPadrao}
@@ -122,6 +124,17 @@ export default function Post({ navigation, route }) {
             <TouchableOpacity style={estilos.botao} onPress={salvar} disabled={desabilitarEnvio}>
                 <Text style={estilos.textoBotao}>Salvar</Text>
             </TouchableOpacity>
+            
+            <MenuSelecaoInferior setMostrarMenu={setMostrarMenu} mostrarMenu={mostrarMenu}>
+                <TouchableOpacity style={estilos.opcao} onPress={escolherImagemDaGaleria}>
+                    <Text>Adicionar foto</Text>
+                    <Text> &#128247;</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={estilos.opcao}>
+                    <Text>Remover foto</Text>
+                    <Text> &#128465;</Text>
+                </TouchableOpacity>
+            </MenuSelecaoInferior>
         </View>
     );
 }
