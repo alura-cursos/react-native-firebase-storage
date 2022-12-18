@@ -6,7 +6,7 @@ export default StyleSheet.create({
         backgroundColor: "#04244F",
         alignItems: "flex-start",
         justifyContent: "flex-start",
-        paddingTop: StatusBar.currentHeight,
+        paddingTop: StatusBar.currentHeight || 44,
         paddingHorizontal: 20,
     },
     scroll: {

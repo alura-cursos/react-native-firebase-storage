@@ -54,5 +54,11 @@ export default StyleSheet.create({
         color: "#D9D9D9",
         fontSize: 16,
         fontWeight: "500",
+    },
+    imagem: {
+        width: '100%',
+        height: 200,
+        borderRadius: 5,
+        marginVertical: 10,
     }
 });
