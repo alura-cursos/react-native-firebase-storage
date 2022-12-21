@@ -3,10 +3,9 @@ import { View, Text, TextInput, ScrollView, TouchableOpacity, Image, LogBox } fr
 import { salvarPost, atualizarPost, deletarPost } from "../../servicos/firestore";
 import estilos from "./estilos";
 import { entradas } from "./entradas";
-import { alteraDados } from "../../utils/comum";
+import { alteraDados, escolherImagemDaGaleria, verificarItens } from "../../utils/comum";
 import { IconeClicavel } from "../../componentes/IconeClicavel";
 import { salvarImagem, deletarImagem } from "../../servicos/storage";
-import * as ImagePicker from 'expo-image-picker';
 
 import uploadImagemPadrao from '../../assets/upload.jpeg';
 import { MenuSelecaoInferior } from "../../componentes/MenuSelecaoInferior";
@@ -31,13 +30,16 @@ export default function Post({ navigation, route }) {
         setDesabilitarEnvio(true);
 
         if (item) {
-            await verificarAlteracaoPost();
+            if(!verificarItens(post.imagemUrl, imagem)){
+                atualizarPostComImagem(item.id)
+            }
+            atualizarPost(item.id, post)
             return navigation.goBack();
         } 
 
         const idPost = await salvarPost({
             ...post,
-            imagemUrl: ''
+            imagemUrl: imagem ? '' : null
         });
         navigation.goBack()
 
@@ -51,30 +53,6 @@ export default function Post({ navigation, route }) {
         await atualizarPost(idPost, {
             imagemUrl: url
         });
-    }
-
-    async function verificarAlteracaoPost(){
-        if(post.imagemUrl != imagem){
-            atualizarPostComImagem(item.id)
-        }
-        else {
-            atualizarPost(item.id, post)
-        }
-    }
-
-    async function escolherImagemDaGaleria(){
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-          });
-      
-          console.log(result);
-      
-          if (!result.canceled) {
-            setImagem(result.assets[0].uri);
-          }
     }
 
     async function removerImagemPost(){
@@ -146,7 +124,7 @@ export default function Post({ navigation, route }) {
             </TouchableOpacity>
             
             <MenuSelecaoInferior setMostrarMenu={setMostrarMenu} mostrarMenu={mostrarMenu}>
-                <TouchableOpacity style={estilos.opcao} onPress={escolherImagemDaGaleria}>
+                <TouchableOpacity style={estilos.opcao} onPress={() => escolherImagemDaGaleria(setImagem)}>
                     <Text>Adicionar foto</Text>
                     <Text> &#128247;</Text>
                 </TouchableOpacity>
