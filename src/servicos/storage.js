@@ -1,5 +1,5 @@
 import { storage } from "../config/firebase";
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 export async function salvarImagem(imagem, imagemNome){
   if(!imagem) return;
@@ -17,5 +17,17 @@ export async function salvarImagem(imagem, imagemNome){
   catch(error) {
     console.log(error)
     return null;
+  }
+}
+
+export async function deletarImagem(postId){
+  const refStorage = ref(storage, `posts/${postId}.png`);
+  try {
+    await deleteObject(refStorage);
+    return true;
+  }
+  catch(error){
+    console.log(error)
+    return false;
   }
 }

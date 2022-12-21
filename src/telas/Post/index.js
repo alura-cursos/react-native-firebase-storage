@@ -5,7 +5,7 @@ import estilos from "./estilos";
 import { entradas } from "./entradas";
 import { alteraDados } from "../../utils/comum";
 import { IconeClicavel } from "../../componentes/IconeClicavel";
-import { salvarImagem } from "../../servicos/storage";
+import { salvarImagem, deletarImagem } from "../../servicos/storage";
 import * as ImagePicker from 'expo-image-picker';
 
 import uploadImagemPadrao from '../../assets/upload.jpeg';
@@ -75,6 +75,15 @@ export default function Post({ navigation, route }) {
           }
     }
 
+    async function removerImagemPost(){
+        if(!item) return
+        if(deletarImagem(item.id)){
+            await atualizarPost(item.id, {
+                imagemUrl: null
+            });
+            navigation.goBack()
+        }
+    }
 
     return (
         <View style={estilos.container}>
@@ -130,7 +139,7 @@ export default function Post({ navigation, route }) {
                     <Text>Adicionar foto</Text>
                     <Text> &#128247;</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={estilos.opcao}>
+                <TouchableOpacity style={estilos.opcao} onPress={removerImagemPost}>
                     <Text>Remover foto</Text>
                     <Text> &#128465;</Text>
                 </TouchableOpacity>
