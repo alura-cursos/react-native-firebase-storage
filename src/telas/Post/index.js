@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, ScrollView, TouchableOpacity, Image } from "react-native";
+import { View, Text, TextInput, ScrollView, TouchableOpacity, Image, LogBox } from "react-native";
 import { salvarPost, atualizarPost, deletarPost } from "../../servicos/firestore";
 import estilos from "./estilos";
 import { entradas } from "./entradas";
@@ -10,6 +10,8 @@ import * as ImagePicker from 'expo-image-picker';
 
 import uploadImagemPadrao from '../../assets/upload.jpeg';
 import { MenuSelecaoInferior } from "../../componentes/MenuSelecaoInferior";
+
+LogBox.ignoreAllLogs()
 
 export default function Post({ navigation, route }) {
     const [desabilitarEnvio, setDesabilitarEnvio] = useState(false);
@@ -77,12 +79,21 @@ export default function Post({ navigation, route }) {
 
     async function removerImagemPost(){
         if(!item) return
-        if(deletarImagem(item.id)){
+        if(await deletarImagem(item.id)){
             await atualizarPost(item.id, {
                 imagemUrl: null
             });
             navigation.goBack()
         }
+    }
+
+    async function excluirPostCompleto(){
+        if(!item) return
+        deletarPost(item.id);
+        if(item.imagemUrl != null){
+            deletarImagem(item.id)
+        } 
+        navigation.goBack();
     }
 
     return (
@@ -91,7 +102,7 @@ export default function Post({ navigation, route }) {
                 <Text style={estilos.titulo}>{item ? "Editar post" : "Novo Post"}</Text>
                 <IconeClicavel 
                     exibir={!!item} 
-                    onPress={() => {deletarPost(item.id); navigation.goBack()}}
+                    onPress={excluirPostCompleto}
                     iconeNome="trash-2" 
                 />
             </View>
